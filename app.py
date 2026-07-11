@@ -1,9 +1,12 @@
-from flask import Flask, redirect, render_template, request, url_for
-from werkzeug.security import generate_password_hash
+import os
 
-from database.db import create_user, get_db, init_db, seed_db
+from flask import Flask, redirect, render_template, request, session, url_for
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from database.db import create_user, get_db, get_user_by_email, init_db, seed_db
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "dev-fallback-key")
 
 with app.app_context():
     init_db()
@@ -22,6 +25,9 @@ def landing():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if session.get("user_id"):
+        return redirect(url_for("landing"))
+
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip()
@@ -44,8 +50,29 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("user_id"):
+        return redirect(url_for("landing"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        if not email or not password:
+            error = "Invalid email or password."
+        else:
+            user = get_user_by_email(email)
+            if user is None or not check_password_hash(user["password_hash"], password):
+                error = "Invalid email or password."
+            else:
+                session.clear()
+                session["user_id"] = user["id"]
+                session["name"] = user["name"]
+                return redirect(url_for("landing"))
+
+        return render_template("login.html", error=error)
+
     return render_template("login.html")
 
 
@@ -66,7 +93,8 @@ def privacy():
 
 @app.route("/logout")
 def logout():
-    return "Logout — coming in Step 3"
+    session.clear()
+    return redirect(url_for("landing"))
 
 
 @app.route("/profile")
