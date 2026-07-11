@@ -58,6 +58,17 @@ def create_user(name, email, password_hash):
         conn.close()
 
 
+def get_user_by_email(email):
+    conn = get_db()
+    try:
+        return conn.execute(
+            "SELECT * FROM users WHERE LOWER(email) = LOWER(?)",
+            (email,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+
 def seed_db():
     conn = get_db()
     existing = conn.execute("SELECT COUNT(*) AS count FROM users").fetchone()
