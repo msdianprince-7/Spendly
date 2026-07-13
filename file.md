@@ -16,8 +16,6 @@ Implemented (render templates):
 - `/login` — login page
 
 Placeholder stubs (return plain text, not yet implemented):
-- `/logout` — "coming in Step 3"
-- `/profile` — "coming in Step 4"
 - `/expenses/add` — "coming in Step 7"
 - `/expenses/<int:id>/edit` — "coming in Step 8"
 - `/expenses/<int:id>/delete` — "coming in Step 9"
@@ -31,8 +29,6 @@ Step 1 — Database Setup:
 - `seed_db()` — inserts sample data for development
 
 ## Current state
-The auth-page templates and routing skeleton exist and run, but the database
-layer and actual expense CRUD logic have not been implemented yet. The build
-is structured as a step-by-step progression (per the code comments), with
-auth (login/logout/profile) and expense management (add/edit/delete) as the
-next milestones.
+Auth (login/logout/profile) is implemented. Expense management
+(add/edit/delete) has not been implemented yet. The build is structured as a
+step-by-step progression, with expense CRUD as the next milestone.
