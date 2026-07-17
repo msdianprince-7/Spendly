@@ -3,7 +3,17 @@ import os
 from flask import Flask, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database.db import create_user, get_db, get_user_by_email, init_db, seed_db
+from database.db import (
+    create_user,
+    get_category_breakdown,
+    get_db,
+    get_expense_stats,
+    get_expenses_by_user,
+    get_user_by_email,
+    get_user_by_id,
+    init_db,
+    seed_db,
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-fallback-key")
@@ -102,33 +112,10 @@ def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
-    user = {
-        "name": session.get("name"),
-        "email": "demo@spendly.com",
-        "member_since": "January 2026",
-    }
-
-    stats = {
-        "total_spent": 798.54,
-        "transaction_count": 8,
-        "top_category": "Bills",
-    }
-
-    transactions = [
-        {"date": "2026-07-06", "description": "Monthly rent", "category": "Bills", "amount": 650.00},
-        {"date": "2026-07-05", "description": "Electricity bill", "category": "Bills", "amount": 45.00},
-        {"date": "2026-07-18", "description": "New shoes", "category": "Shopping", "amount": 39.99},
-        {"date": "2026-07-10", "description": "Pharmacy", "category": "Health", "amount": 22.30},
-        {"date": "2026-07-14", "description": "Movie tickets", "category": "Entertainment", "amount": 15.00},
-    ]
-
-    categories = [
-        {"name": "Bills", "total": 695.00, "percent": 87},
-        {"name": "Shopping", "total": 39.99, "percent": 5},
-        {"name": "Health", "total": 22.30, "percent": 3},
-        {"name": "Entertainment", "total": 15.00, "percent": 2},
-        {"name": "Food", "total": 12.50, "percent": 2},
-    ]
+    user = get_user_by_id(session["user_id"])
+    stats = get_expense_stats(session["user_id"])
+    transactions = get_expenses_by_user(session["user_id"])
+    categories = get_category_breakdown(session["user_id"])
 
     return render_template(
         "profile.html",
