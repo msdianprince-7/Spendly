@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 from werkzeug.security import generate_password_hash
@@ -69,6 +69,23 @@ def get_user_by_email(email):
         conn.close()
 
 
+def get_user_by_id(user_id):
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT id, name, email, created_at FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        user = dict(row)
+        created = datetime.strptime(user["created_at"], "%Y-%m-%d %H:%M:%S")
+        user["member_since"] = created.strftime("%B %Y")
+        return user
+    finally:
+        conn.close()
+
+
 def seed_db():
     conn = get_db()
     existing = conn.execute("SELECT COUNT(*) AS count FROM users").fetchone()
@@ -100,3 +117,63 @@ def seed_db():
     )
     conn.commit()
     conn.close()
+
+
+def get_expenses_by_user(user_id):
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            "SELECT id, amount, category, date, description "
+            "FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC",
+            (user_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+
+def get_expense_stats(user_id):
+    conn = get_db()
+    try:
+        total_row = conn.execute(
+            "SELECT COALESCE(SUM(amount), 0) AS total, COUNT(*) AS count "
+            "FROM expenses WHERE user_id = ?",
+            (user_id,),
+        ).fetchone()
+        top_row = conn.execute(
+            "SELECT category, SUM(amount) AS cat_total "
+            "FROM expenses WHERE user_id = ? "
+            "GROUP BY category ORDER BY cat_total DESC LIMIT 1",
+            (user_id,),
+        ).fetchone()
+        return {
+            "total_spent": float(total_row["total"]),
+            "transaction_count": int(total_row["count"]),
+            "top_category": top_row["category"] if top_row else "—",
+        }
+    finally:
+        conn.close()
+
+
+def get_category_breakdown(user_id):
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            "SELECT category AS name, SUM(amount) AS total "
+            "FROM expenses WHERE user_id = ? "
+            "GROUP BY category ORDER BY total DESC",
+            (user_id,),
+        ).fetchall()
+        categories = [{"name": r["name"], "total": float(r["total"])} for r in rows]
+        if not categories:
+            return []
+
+        grand_total = sum(c["total"] for c in categories)
+        percents = [round(c["total"] / grand_total * 100) for c in categories]
+        drift = 100 - sum(percents)
+        percents[0] += drift
+        for c, p in zip(categories, percents):
+            c["percent"] = p
+        return categories
+    finally:
+        conn.close()
