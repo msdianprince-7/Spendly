@@ -27,6 +27,14 @@
     gap: 1.5rem;
 }
 
+.profile-info {
+    flex: 1;
+}
+
+.profile-card .btn-primary {
+    flex-shrink: 0;
+}
+
 .profile-avatar {
     flex-shrink: 0;
     width: 64px;
@@ -168,18 +176,6 @@
     font-size: 1.15rem;
     color: var(--ink);
     margin-bottom: 1rem;
-}
-
-.profile-block-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.profile-block-header .profile-block-title {
-    margin-bottom: 0;
 }
 
 /* Transaction history table */
