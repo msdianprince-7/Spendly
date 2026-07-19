@@ -1,10 +1,13 @@
+import os
 import sqlite3
 from datetime import date, datetime
 from pathlib import Path
 
 from werkzeug.security import generate_password_hash
 
-DB_PATH = Path(__file__).resolve().parent.parent / "expense_tracker.db"
+DB_PATH = Path(
+    os.environ.get("DATABASE_PATH", str(Path(__file__).resolve().parent.parent / "expense_tracker.db"))
+)
 
 CATEGORIES = ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"]
 
