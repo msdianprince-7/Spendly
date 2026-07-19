@@ -170,6 +170,18 @@
     margin-bottom: 1rem;
 }
 
+.profile-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-block-header .profile-block-title {
+    margin-bottom: 0;
+}
+
 /* Transaction history table */
 
 .profile-table-wrap {

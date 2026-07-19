@@ -55,7 +55,10 @@
         </div>
 
         <div class="profile-block">
-            <h2 class="profile-block-title">Recent transactions</h2>
+            <div class="profile-block-header">
+                <h2 class="profile-block-title">Recent transactions</h2>
+                <a href="{{ url_for('add_expense') }}" class="btn-primary">Add Expense</a>
+            </div>
             <div class="profile-table-wrap">
                 <table class="profile-table">
                     <thead>
