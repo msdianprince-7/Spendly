@@ -384,10 +384,6 @@ pytest -v         # verbose, per-test output
 
 **Full-stack engineer** with a focus on shipping production-quality software using modern AI-assisted engineering workflows — spec-driven development, Claude Code, and disciplined git practices, alongside hands-on experience across **React, Next.js, TypeScript, Node.js, PostgreSQL, and Docker**.
 
-- 💼 LinkedIn: *[add your LinkedIn URL]*
-- 💻 GitHub: *[add your GitHub URL]*
-- 🌐 Portfolio: *[add your portfolio URL]*
-
 ---
 
 <p align="center"><sub>Built with Flask, SQLite, and a disciplined Claude Code workflow.</sub></p>
