@@ -100,6 +100,32 @@ def create_expense(user_id, amount, category, date, description):
         conn.close()
 
 
+def get_expense_by_id(expense_id, user_id):
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT id, user_id, amount, category, date, description "
+            "FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
+
+
+def update_expense(expense_id, user_id, amount, category, date, description):
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE expenses SET amount = ?, category = ?, date = ?, description = ? "
+            "WHERE id = ? AND user_id = ?",
+            (amount, category, date, description, expense_id, user_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def seed_db():
     conn = get_db()
     existing = conn.execute("SELECT COUNT(*) AS count FROM users").fetchone()
