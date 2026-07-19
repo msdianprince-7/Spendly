@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -107,15 +108,30 @@ def logout():
     return redirect(url_for("landing"))
 
 
+def _parse_date_arg(value):
+    if not value:
+        return None
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+    except ValueError:
+        return None
+    return value
+
+
 @app.route("/profile")
 def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
+    start_date = _parse_date_arg(request.args.get("start"))
+    end_date = _parse_date_arg(request.args.get("end"))
+    if start_date and end_date and start_date > end_date:
+        start_date, end_date = None, None
+
     user = get_user_by_id(session["user_id"])
-    stats = get_expense_stats(session["user_id"])
-    transactions = get_expenses_by_user(session["user_id"])
-    categories = get_category_breakdown(session["user_id"])
+    stats = get_expense_stats(session["user_id"], start_date, end_date)
+    transactions = get_expenses_by_user(session["user_id"], start_date, end_date)
+    categories = get_category_breakdown(session["user_id"], start_date, end_date)
 
     return render_template(
         "profile.html",
@@ -123,6 +139,8 @@ def profile():
         stats=stats,
         transactions=transactions,
         categories=categories,
+        start_date=start_date,
+        end_date=end_date,
     )
 
 
