@@ -19,7 +19,6 @@ A personal expense tracker built with Flask and SQLite — designed and shipped 
 | | |
 |---|---|
 | 🔗 **Live demo** | [spendly.up.railway.app](https://expense-tracker-production-62d9.up.railway.app) *(demo login: `demo@spendly.com` / `demo123`)* |
-| 🎥 **Video walkthrough** | *placeholder — add a Loom/YouTube link here* |
 
 ### Screenshots
 
