@@ -19,8 +19,21 @@ A personal expense tracker built with Flask and SQLite — designed and shipped 
 | | |
 |---|---|
 | 🔗 **Live demo** | [spendly.up.railway.app](https://expense-tracker-production-62d9.up.railway.app) *(demo login: `demo@spendly.com` / `demo123`)* |
-| 🖼️ **Screenshots** | `docs/screenshots/` — *add landing, profile, and add-expense screenshots here* |
 | 🎥 **Video walkthrough** | *placeholder — add a Loom/YouTube link here* |
+
+### Screenshots
+
+| Landing page | Sign in |
+|---|---|
+| ![Landing page](docs/screenshots/landing.jpg) | ![Sign in](docs/screenshots/login.jpg) |
+
+| Profile dashboard | Category breakdown |
+|---|---|
+| ![Profile dashboard](docs/screenshots/profile.jpg) | ![Category breakdown](docs/screenshots/category-breakdown.jpg) |
+
+| Add expense |
+|---|
+| ![Add expense](docs/screenshots/add-expense.jpg) |
 
 ---
 
@@ -166,6 +179,22 @@ erDiagram
 ## AI Development Workflow
 
 > This is the section that matters most. Spendly was not "vibe coded" — it was built using an iterative, reviewable, AI-assisted engineering process where Claude Code acted as an implementation partner operating under explicit specs, constraints, and review gates.
+
+### 🤖 AI-Assisted Engineering
+
+This project was developed using a structured AI-assisted workflow with Claude Code.
+
+Highlights:
+- Spec-driven development using feature specifications
+- Implementation planning before coding
+- Incremental feature development
+- AI-assisted code reviews and refactoring
+- Automated test generation
+- Conventional commit messages
+- Pull request generation with structured descriptions
+- Continuous documentation updates
+
+AI accelerated development, while all architectural decisions, feature validation, and final implementation review were performed by the developer.
 
 **Spec-driven development.** Every feature started as a written spec (`.claude/specs/NN-feature-name.md`) covering overview, dependencies, routes, database changes, template changes, implementation rules, and a testable "definition of done" — *before* any implementation began.
 
